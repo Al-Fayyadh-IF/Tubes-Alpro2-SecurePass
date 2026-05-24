@@ -150,23 +150,20 @@ func hapusAkun() {
 		n -= 1
 		fmt.Println("== Akun berhasil dihapus ==")
 	} else if jumlah > 1 {
-		fmt.Print("Email akun yang ingin dihapus: ")
-		fmt.Scan(&email)
-		idx = sequentialSearchE(email)
-		if idx == -1 {
-			fmt.Println("Email tidak ditemukan")
-			clearScreen()
-			fmt.Println("Nama layanan yang ingin dihapus: ", nL)
-			fmt.Print("Email akun yang ingin dihapus: ")
+		idx = -1
+		for idx == -1 {
+			fmt.Print("Email akun yang ingin diubah: ")
 			fmt.Scan(&email)
 			idx = sequentialSearchE(email)
-		} else {
-			for i = idx; i < n - 1; i++ {
-				data[i] = data[i + 1]
+			if idx == -1 {
+				fmt.Println("Email tidak ditemukan, coba lagi.")
 			}
-			n -= 1
-			fmt.Println("== Akun berhasil dihapus ==")
 		}
+		for i = idx; i < n - 1; i++ {
+			data[i] = data[i + 1]
+		}
+		n -= 1
+		fmt.Println("== Akun berhasil dihapus ==")
 	}
 }
 
