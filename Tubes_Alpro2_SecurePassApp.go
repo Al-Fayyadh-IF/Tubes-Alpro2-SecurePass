@@ -10,7 +10,7 @@ const NMAX = 100
 
 type akun struct {
 	namaLayanan, email, password, namaPengguna, tglUpdate string
-	idInput                                               int
+	idInput int
 }
 
 var data [NMAX]akun
