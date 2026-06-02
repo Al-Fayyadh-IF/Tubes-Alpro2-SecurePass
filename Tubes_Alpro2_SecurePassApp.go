@@ -304,9 +304,9 @@ func binarySearchAk(cari string, posisi int) int {
 func cariAkun() {
 	var pilih int
 	var jln bool
+	clearScreen()
 	jln = false
 	for jln == false {
-		clearScreen()
 		fmt.Println("1. Sequential Search")
 		fmt.Println("2. Binary Search")
 		fmt.Println("====================================")
@@ -319,7 +319,9 @@ func cariAkun() {
 			cariAkunBin()
 			jln = true
 		} else {
+			clearScreen()
 			fmt.Println("Pilihan tidak tersedia. Silakan pilih lagi.")
+			fmt.Println()
 		}
 	}
 }
