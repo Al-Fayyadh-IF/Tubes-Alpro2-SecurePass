@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"os"
@@ -6,10 +7,12 @@ import (
 )
 
 const NMAX = 100
+
 type akun struct {
 	namaLayanan, email, password, namaPengguna, tglUpdate string
-	idInput int
+	idInput                                               int
 }
+
 var data [NMAX]akun
 var n, nextID int
 
@@ -54,7 +57,7 @@ func tambahAkun() {
 	fmt.Scan(&akunBaru.tglUpdate)
 	akunBaru.idInput = nextID
 	data[n] = akunBaru
-	nextID++ 
+	nextID++
 	n++
 	fmt.Println("== Akun berhasil ditambahkan ==")
 }
@@ -159,8 +162,8 @@ func hapusAkun() {
 				fmt.Println("Email tidak ditemukan, coba lagi.")
 			}
 		}
-		for i = idx; i < n - 1; i++ {
-			data[i] = data[i + 1]
+		for i = idx; i < n-1; i++ {
+			data[i] = data[i+1]
 		}
 		n -= 1
 		fmt.Println("== Akun berhasil dihapus ==")
@@ -219,7 +222,7 @@ func tampilkanSemuaAkun() {
 func banyakAkunSatuLayanan(cari string) int {
 	var i, jumlah int
 	for i = 0; i < n; i++ {
-		if data[i].namaLayanan == cari  {
+		if data[i].namaLayanan == cari {
 			jumlah++
 		}
 	}
@@ -229,7 +232,7 @@ func banyakAkunSatuLayanan(cari string) int {
 func sequentialSearchL(cari string) int {
 	var i int
 	for i = 0; i < n; i++ {
-		if data[i].namaLayanan == cari  {
+		if data[i].namaLayanan == cari {
 			return i
 		}
 	}
@@ -239,7 +242,7 @@ func sequentialSearchL(cari string) int {
 func sequentialSearchE(cari string) int {
 	var i int
 	for i = 0; i < n; i++ {
-		if data[i].email == cari  {
+		if data[i].email == cari {
 			return i
 		}
 	}
@@ -255,9 +258,9 @@ func binarySearch(cari string) int {
 		tengah = (kiri + kanan) / 2
 		if cari > data[tengah].namaLayanan {
 			kiri = tengah + 1
-		}else if cari < data[tengah].namaLayanan  {
+		} else if cari < data[tengah].namaLayanan {
 			kanan = tengah - 1
-		}else{
+		} else {
 			found = tengah
 		}
 	}
@@ -291,7 +294,7 @@ func binarySearchAk(cari string, posisi int) int {
 		if data[tengah].namaLayanan == cari {
 			found = tengah
 			kiri = tengah + 1
-		}else{
+		} else {
 			kanan = tengah - 1
 		}
 	}
@@ -312,10 +315,10 @@ func cariAkun() {
 		if pilih == 1 {
 			cariAkunSeq()
 			jln = true
-		}else if pilih == 2 {
+		} else if pilih == 2 {
 			cariAkunBin()
 			jln = true
-		}else{
+		} else {
 			fmt.Println("Pilihan tidak tersedia. Silakan pilih lagi.")
 		}
 	}
@@ -336,8 +339,7 @@ func cariAkunSeq() {
 	jumlah = banyakAkunSatuLayanan(nama)
 	if jumlah == 0 {
 		fmt.Println("Akun tidak ditemukan")
-	}else{
-		fmt.Println()
+	} else {
 		fmt.Println("== Akun ditemukan! ==")
 		for i = 0; i < n; i++ {
 			if data[i].namaLayanan == nama {
@@ -364,7 +366,7 @@ func cariAkunBin() {
 	jumlah = banyakAkunSatuLayanan(nama)
 	if jumlah == 0 {
 		fmt.Println("Akun tidak ditemukan")
-	}else{
+	} else {
 		fmt.Println("== Akun ditemukan! ==")
 		pT = binarySearch(nama)
 		pAw = binarySearchAw(nama, pT)
@@ -381,18 +383,18 @@ func selectionSort() {
 	var temp akun
 	pass = 1
 	for pass <= n-1 {
-		idx = pass-1
+		idx = pass - 1
 		i = pass
 		for i < n {
 			if data[idx].namaLayanan > data[i].namaLayanan {
 				idx = i
 			}
-			i = i+1
+			i = i + 1
 		}
 		temp = data[pass-1]
 		data[pass-1] = data[idx]
 		data[idx] = temp
-		pass = pass+1
+		pass = pass + 1
 	}
 }
 
@@ -400,12 +402,12 @@ func insertionSort() {
 	var pass, i int
 	var temp akun
 	pass = 1
-	for pass <= n - 1 {
+	for pass <= n-1 {
 		i = pass
 		temp = data[pass]
-		for i > 0 && temp.idInput < data[i - 1].idInput {
-			data[i] = data[i - 1]
-			i = i-1
+		for i > 0 && temp.idInput < data[i-1].idInput {
+			data[i] = data[i-1]
+			i = i - 1
 		}
 		data[i] = temp
 		pass = pass + 1
@@ -462,10 +464,26 @@ func statistik() {
 	fmt.Printf("  Kuat   : %d akun\n", kuat)
 }
 
+func isiDataDummy() {
+	data[0] = akun{namaLayanan: "Roblox", email: "fayyadh@gmail.com", password: "Fayyadh123*", namaPengguna: "fayyadhgaming", tglUpdate: "26-05-2026", idInput: 0}
+	data[1] = akun{namaLayanan: "Instagram", email: "fatih@gmail.com", password: "fatih123", namaPengguna: "fatih", tglUpdate: "27-05-2026", idInput: 1}
+	data[2] = akun{namaLayanan: "Gmail", email: "rijal@gmail.com", password: "pass", namaPengguna: "rijalaslam", tglUpdate: "28-05-2026", idInput: 2}
+	data[3] = akun{namaLayanan: "Discord", email: "rehan@gmail.com", password: "Reh@n2025", namaPengguna: "rehanwangsap", tglUpdate: "28-05-2026", idInput: 3}
+	data[4] = akun{namaLayanan: "Spotify", email: "rafi@gmail.com", password: "musik", namaPengguna: "rafiSapu", tglUpdate: "29-05-2026", idInput: 4}
+	data[5] = akun{namaLayanan: "Github", email: "ghifary@gmail.com", password: "Ghif4ry#", namaPengguna: "ghifaryyes", tglUpdate: "30-05-2026", idInput: 5}
+	data[6] = akun{namaLayanan: "X", email: "bagas@gmail.com", password: "bagas123", namaPengguna: "bagasjimat", tglUpdate: "31-05-2026", idInput: 6}
+	data[7] = akun{namaLayanan: "Tokopedia", email: "rizky@gmail.com", password: "R1zky@Top", namaPengguna: "rizkyplay", tglUpdate: "01-06-2026", idInput: 7}
+	data[8] = akun{namaLayanan: "Shopee", email: "dimas@gmail.com", password: "dimas", namaPengguna: "dimasmmamang", tglUpdate: "02-06-2026", idInput: 8}
+	data[9] = akun{namaLayanan: "Netflix", email: "arya@gmail.com", password: "Arya99!Nflx", namaPengguna: "aryaSMH", tglUpdate: "02-06-2026", idInput: 9}
+	n = 10
+	nextID = 10
+}
+
 func main() {
 	var pilih int
 	var jln bool
 	jln = true
+	isiDataDummy()
 	fmt.Println("Selamat datang di SecurePass!")
 	for jln == true {
 		menu()
@@ -479,7 +497,7 @@ func main() {
 		} else if pilih == 2 {
 			ubahAkun()
 		} else if pilih == 3 {
-		 	hapusAkun()
+			hapusAkun()
 		} else if pilih == 4 {
 			cariAkun()
 		} else if pilih == 5 {
