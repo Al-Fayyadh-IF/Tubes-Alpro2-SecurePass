@@ -29,9 +29,10 @@ func menu() {
 	fmt.Println("2. Ubah Akun")
 	fmt.Println("3. Hapus Akun")
 	fmt.Println("4. Cari Akun")
-	fmt.Println("5. Urutkan Berdasarkan Nama")
-	fmt.Println("6. Urutkan Berdasarkan Waktu Input")
-	fmt.Println("7. Statistik")
+	fmt.Println("5. Tampilkan Semua Akun")
+	fmt.Println("6. Urutkan Berdasarkan Nama")
+	fmt.Println("7. Urutkan Berdasarkan Waktu Input")
+	fmt.Println("8. Statistik")
 	fmt.Println("0. Keluar")
 	fmt.Println("====================================")
 }
@@ -362,7 +363,7 @@ func cariAkunBin() {
 		menu()
 	}
 	clearScreen()
-	selectionSort()
+	selectionSortAsc()
 	fmt.Print("Nama layanan yang dicari: ")
 	fmt.Scan(&nama)
 	jumlah = banyakAkunSatuLayanan(nama)
@@ -380,7 +381,7 @@ func cariAkunBin() {
 	}
 }
 
-func selectionSort() {
+func selectionSortAsc() {
 	var pass, idx, i int
 	var temp akun
 	pass = 1
@@ -400,7 +401,27 @@ func selectionSort() {
 	}
 }
 
-func insertionSort() {
+func selectionSortDesc() {
+	var pass, idx, i int
+	var temp akun
+	pass = 1
+	for pass <= n-1 {
+		idx = pass - 1
+		i = pass
+		for i < n {
+			if data[idx].namaLayanan < data[i].namaLayanan {
+				idx = i
+			}
+			i = i + 1
+		}
+		temp = data[pass-1]
+		data[pass-1] = data[idx]
+		data[idx] = temp
+		pass = pass + 1
+	}
+}
+
+func insertionSortAsc() {
 	var pass, i int
 	var temp akun
 	pass = 1
@@ -416,28 +437,90 @@ func insertionSort() {
 	}
 }
 
+func insertionSortDesc() {
+	var pass, i int
+	var temp akun
+	pass = 1
+	for pass <= n-1 {
+		i = pass
+		temp = data[pass]
+		for i > 0 && temp.idInput > data[i-1].idInput {
+			data[i] = data[i-1]
+			i = i - 1
+		}
+		data[i] = temp
+		pass = pass + 1
+	}
+}
+
 func urutkanNama() {
+	var pilih int
+	var jln bool
 	clearScreen()
 	if n == 0 {
 		fmt.Println("Belum ada data akun")
 		clearScreen()
 		menu()
+	}else {
+		jln = false
+		for jln == false {
+			fmt.Println("1. Ascending")
+			fmt.Println("2. Descending")
+			fmt.Println("====================================")
+			fmt.Print("Pilih metode: ")
+			fmt.Scan(&pilih)
+			if pilih == 1 {
+				selectionSortAsc()
+				jln = true
+				fmt.Println("== Data berhasil diurutkan alfabetis ascending ==")
+				tampilkanSemuaAkun()
+			} else if pilih == 2 {
+				selectionSortDesc()
+				jln = true
+				fmt.Println("== Data berhasil diurutkan alfabetis descending ==")
+				tampilkanSemuaAkun()
+			} else {
+				clearScreen()
+				fmt.Println("Pilihan tidak tersedia. Silakan pilih lagi.")
+				fmt.Println()
+			}
+		}
 	}
-	selectionSort()
-	fmt.Println("== Data berhasil diurutkan alfabetis ==")
-	tampilkanSemuaAkun()
 }
 
 func urutkanInput() {
+	var pilih int
+	var jln bool
 	clearScreen()
 	if n == 0 {
 		fmt.Println("Belum ada data akun")
 		clearScreen()
 		menu()
+	}else{
+		jln = false
+		for jln == false {
+			fmt.Println("1. Ascending")
+			fmt.Println("2. Descending")
+			fmt.Println("====================================")
+			fmt.Print("Pilih metode: ")
+			fmt.Scan(&pilih)
+			if pilih == 1 {
+				insertionSortAsc()
+				jln = true
+				fmt.Println("== Data berhasil diurutkan berdasarkan waktu input ascending ==")
+				tampilkanSemuaAkun()
+			} else if pilih == 2 {
+				insertionSortDesc()
+				jln = true
+				fmt.Println("== Data berhasil diurutkan berdasarkan waktu input desscending ==")
+				tampilkanSemuaAkun()
+			} else {
+				clearScreen()
+				fmt.Println("Pilihan tidak tersedia. Silakan pilih lagi.")
+				fmt.Println()
+			}
+		}
 	}
-	insertionSort()
-	fmt.Println("== Data berhasil diurutkan berdasarkan waktu input ==")
-	tampilkanSemuaAkun()
 }
 
 func statistik() {
@@ -503,10 +586,12 @@ func main() {
 		} else if pilih == 4 {
 			cariAkun()
 		} else if pilih == 5 {
-			urutkanNama()
+			tampilkanSemuaAkun()
 		} else if pilih == 6 {
-			urutkanInput()
+			urutkanNama()
 		} else if pilih == 7 {
+			urutkanInput()
+		} else if pilih == 8 {
 			statistik()
 		} else {
 			fmt.Println("Pilihan tidak tersedia. Silakan pilih lagi.")
