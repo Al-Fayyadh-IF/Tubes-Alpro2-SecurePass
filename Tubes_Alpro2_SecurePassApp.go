@@ -7,14 +7,11 @@ import (
 )
 
 const NMAX = 100
-
 type akun struct {
 	namaLayanan, email, password, namaPengguna, tglUpdate string
 	idInput int
 }
-
 var data [NMAX]akun
-var n, nextID int
 
 func clearScreen() {
 	var cmd *exec.Cmd
@@ -37,7 +34,7 @@ func menu() {
 	fmt.Println("====================================")
 }
 
-func tambahAkun() {
+func tambahAkun(n, nextID int) {
 	var akunBaru akun
 	clearScreen()
 	if n >= NMAX {
@@ -58,12 +55,10 @@ func tambahAkun() {
 	fmt.Scan(&akunBaru.tglUpdate)
 	akunBaru.idInput = nextID
 	data[n] = akunBaru
-	nextID++
-	n++
 	fmt.Println("== Akun berhasil ditambahkan ==")
 }
 
-func ubahAkun() {
+func ubahAkun(n int) {
 	var nL, email, emailBaru, pwBaru, npBaru, tglBaru string
 	var idx, jumlah int
 	clearScreen()
@@ -74,13 +69,13 @@ func ubahAkun() {
 	}
 	fmt.Print("Nama layanan yang ingin diubah: ")
 	fmt.Scan(&nL)
-	jumlah = banyakAkunSatuLayanan(nL)
+	jumlah = banyakAkunSatuLayanan(n, nL)
 	if jumlah == 0 {
 		fmt.Println("Akun tidak ditemukan")
 		clearScreen()
 		menu()
 	} else if jumlah == 1 {
-		idx = sequentialSearchL(nL)
+		idx = sequentialSearchL(n, nL)
 		fmt.Println()
 		fmt.Println("Data lama:")
 		tampilkanAkun(idx)
@@ -104,7 +99,7 @@ func ubahAkun() {
 		for idx == -1 {
 			fmt.Print("Email akun yang ingin diubah: ")
 			fmt.Scan(&email)
-			idx = sequentialSearchE(email)
+			idx = sequentialSearchE(n, email)
 			if idx == -1 {
 				fmt.Println("Email tidak ditemukan, coba lagi.")
 			}
@@ -130,7 +125,7 @@ func ubahAkun() {
 	}
 }
 
-func hapusAkun() {
+func hapusAkun(n, nextID int) {
 	var nL, email string
 	var i, idx, jumlah int
 	clearScreen()
@@ -141,24 +136,23 @@ func hapusAkun() {
 	}
 	fmt.Print("Nama layanan yang ingin dihapus: ")
 	fmt.Scan(&nL)
-	jumlah = banyakAkunSatuLayanan(nL)
+	jumlah = banyakAkunSatuLayanan(n, nL)
 	if jumlah == 0 {
 		fmt.Println("Akun tidak ditemukan")
 		clearScreen()
 		menu()
 	} else if jumlah == 1 {
-		idx = sequentialSearchL(nL)
+		idx = sequentialSearchL(n, nL)
 		for i = idx; i < n-1; i++ {
 			data[i] = data[i+1]
 		}
-		n -= 1
 		fmt.Println("== Akun berhasil dihapus ==")
 	} else if jumlah > 1 {
 		idx = -1
 		for idx == -1 {
 			fmt.Print("Email akun yang ingin diubah: ")
 			fmt.Scan(&email)
-			idx = sequentialSearchE(email)
+			idx = sequentialSearchE(n, email)
 			if idx == -1 {
 				fmt.Println("Email tidak ditemukan, coba lagi.")
 			}
@@ -166,7 +160,6 @@ func hapusAkun() {
 		for i = idx; i < n-1; i++ {
 			data[i] = data[i+1]
 		}
-		n -= 1
 		fmt.Println("== Akun berhasil dihapus ==")
 	}
 }
@@ -202,7 +195,7 @@ func tampilkanAkun(i int) {
 	fmt.Printf("Update        : %s\n", data[i].tglUpdate)
 }
 
-func tampilkanSemuaAkun() {
+func tampilkanSemuaAkun(n int) {
 	var i int
 	clearScreen()
 	if n == 0 {
@@ -220,7 +213,7 @@ func tampilkanSemuaAkun() {
 	}
 }
 
-func banyakAkunSatuLayanan(cari string) int {
+func banyakAkunSatuLayanan(n int, cari string) int {
 	var i, jumlah int
 	for i = 0; i < n; i++ {
 		if data[i].namaLayanan == cari {
@@ -230,7 +223,7 @@ func banyakAkunSatuLayanan(cari string) int {
 	return jumlah
 }
 
-func sequentialSearchL(cari string) int {
+func sequentialSearchL(n int, cari string) int {
 	var i int
 	for i = 0; i < n; i++ {
 		if data[i].namaLayanan == cari {
@@ -240,7 +233,7 @@ func sequentialSearchL(cari string) int {
 	return -1
 }
 
-func sequentialSearchE(cari string) int {
+func sequentialSearchE(n int, cari string) int {
 	var i int
 	for i = 0; i < n; i++ {
 		if data[i].email == cari {
@@ -250,7 +243,7 @@ func sequentialSearchE(cari string) int {
 	return -1
 }
 
-func binarySearch(cari string) int {
+func binarySearch(n int, cari string) int {
 	var kiri, kanan, tengah, found int
 	kiri = 0
 	kanan = n - 1
@@ -268,7 +261,7 @@ func binarySearch(cari string) int {
 	return found
 }
 
-func binarySearchAw(cari string, posisi int) int {
+func binarySearchAw(n int, cari string, posisi int) int {
 	var kiri, kanan, tengah, found int
 	kiri = 0
 	kanan = posisi
@@ -285,7 +278,7 @@ func binarySearchAw(cari string, posisi int) int {
 	return found
 }
 
-func binarySearchAk(cari string, posisi int) int {
+func binarySearchAk(n int, cari string, posisi int) int {
 	var kiri, kanan, tengah, found int
 	kiri = posisi
 	kanan = n - 1
@@ -302,7 +295,7 @@ func binarySearchAk(cari string, posisi int) int {
 	return found
 }
 
-func cariAkun() {
+func cariAkun(n int) {
 	var pilih int
 	var jln bool
 	clearScreen()
@@ -314,10 +307,10 @@ func cariAkun() {
 		fmt.Print("Pilih metode: ")
 		fmt.Scan(&pilih)
 		if pilih == 1 {
-			cariAkunSeq()
+			cariAkunSeq(n)
 			jln = true
 		} else if pilih == 2 {
-			cariAkunBin()
+			cariAkunBin(n)
 			jln = true
 		} else {
 			clearScreen()
@@ -327,7 +320,7 @@ func cariAkun() {
 	}
 }
 
-func cariAkunSeq() {
+func cariAkunSeq(n int) {
 	var nama string
 	var i, jumlah int
 	clearScreen()
@@ -339,7 +332,7 @@ func cariAkunSeq() {
 	clearScreen()
 	fmt.Print("Nama layanan yang dicari: ")
 	fmt.Scan(&nama)
-	jumlah = banyakAkunSatuLayanan(nama)
+	jumlah = banyakAkunSatuLayanan(n, nama)
 	if jumlah == 0 {
 		fmt.Println("Akun tidak ditemukan")
 	} else {
@@ -353,7 +346,7 @@ func cariAkunSeq() {
 	}
 }
 
-func cariAkunBin() {
+func cariAkunBin(n int) {
 	var nama string
 	var i, jumlah, pT, pAw, pAk int
 	clearScreen()
@@ -363,17 +356,17 @@ func cariAkunBin() {
 		menu()
 	}
 	clearScreen()
-	selectionSortAsc()
+	selectionSortAsc(n)
 	fmt.Print("Nama layanan yang dicari: ")
 	fmt.Scan(&nama)
-	jumlah = banyakAkunSatuLayanan(nama)
+	jumlah = banyakAkunSatuLayanan(n, nama)
 	if jumlah == 0 {
 		fmt.Println("Akun tidak ditemukan")
 	} else {
 		fmt.Println("== Akun ditemukan! ==")
-		pT = binarySearch(nama)
-		pAw = binarySearchAw(nama, pT)
-		pAk = binarySearchAk(nama, pT)
+		pT = binarySearch(n, nama)
+		pAw = binarySearchAw(n, nama, pT)
+		pAk = binarySearchAk(n, nama, pT)
 		for i = pAw; i <= pAk; i++ {
 			tampilkanAkun(i)
 			fmt.Println()
@@ -381,7 +374,7 @@ func cariAkunBin() {
 	}
 }
 
-func selectionSortAsc() {
+func selectionSortAsc(n int) {
 	var pass, idx, i int
 	var temp akun
 	pass = 1
@@ -401,7 +394,7 @@ func selectionSortAsc() {
 	}
 }
 
-func selectionSortDesc() {
+func selectionSortDesc(n int) {
 	var pass, idx, i int
 	var temp akun
 	pass = 1
@@ -421,7 +414,7 @@ func selectionSortDesc() {
 	}
 }
 
-func insertionSortAsc() {
+func insertionSortAsc(n int) {
 	var pass, i int
 	var temp akun
 	pass = 1
@@ -437,7 +430,7 @@ func insertionSortAsc() {
 	}
 }
 
-func insertionSortDesc() {
+func insertionSortDesc(n int) {
 	var pass, i int
 	var temp akun
 	pass = 1
@@ -453,7 +446,7 @@ func insertionSortDesc() {
 	}
 }
 
-func urutkanNama() {
+func urutkanNama(n int) {
 	var pilih int
 	var jln bool
 	clearScreen()
@@ -470,15 +463,15 @@ func urutkanNama() {
 			fmt.Print("Pilih metode: ")
 			fmt.Scan(&pilih)
 			if pilih == 1 {
-				selectionSortAsc()
+				selectionSortAsc(n)
 				jln = true
 				fmt.Println("== Data berhasil diurutkan alfabetis ascending ==")
-				tampilkanSemuaAkun()
+				tampilkanSemuaAkun(n)
 			} else if pilih == 2 {
-				selectionSortDesc()
+				selectionSortDesc(n)
 				jln = true
 				fmt.Println("== Data berhasil diurutkan alfabetis descending ==")
-				tampilkanSemuaAkun()
+				tampilkanSemuaAkun(n)
 			} else {
 				clearScreen()
 				fmt.Println("Pilihan tidak tersedia. Silakan pilih lagi.")
@@ -488,7 +481,7 @@ func urutkanNama() {
 	}
 }
 
-func urutkanInput() {
+func urutkanInput(n int) {
 	var pilih int
 	var jln bool
 	clearScreen()
@@ -505,15 +498,15 @@ func urutkanInput() {
 			fmt.Print("Pilih metode: ")
 			fmt.Scan(&pilih)
 			if pilih == 1 {
-				insertionSortAsc()
+				insertionSortAsc(n)
 				jln = true
 				fmt.Println("== Data berhasil diurutkan berdasarkan waktu input ascending ==")
-				tampilkanSemuaAkun()
+				tampilkanSemuaAkun(n)
 			} else if pilih == 2 {
-				insertionSortDesc()
+				insertionSortDesc(n)
 				jln = true
 				fmt.Println("== Data berhasil diurutkan berdasarkan waktu input desscending ==")
-				tampilkanSemuaAkun()
+				tampilkanSemuaAkun(n)
 			} else {
 				clearScreen()
 				fmt.Println("Pilihan tidak tersedia. Silakan pilih lagi.")
@@ -523,7 +516,7 @@ func urutkanInput() {
 	}
 }
 
-func statistik() {
+func statistik(n int) {
 	var i, lemah, sedang, kuat int
 	var kategori string
 	clearScreen()
@@ -560,13 +553,13 @@ func isiDataDummy() {
 	data[7] = akun{namaLayanan: "Tokopedia", email: "rizky@gmail.com", password: "R1zky@Top", namaPengguna: "rizkyplay", tglUpdate: "01-06-2026", idInput: 7}
 	data[8] = akun{namaLayanan: "Shopee", email: "dimas@gmail.com", password: "dimas", namaPengguna: "dimasmmamang", tglUpdate: "02-06-2026", idInput: 8}
 	data[9] = akun{namaLayanan: "Netflix", email: "arya@gmail.com", password: "Arya99!Nflx", namaPengguna: "aryaSMH", tglUpdate: "02-06-2026", idInput: 9}
-	n = 10
-	nextID = 10
 }
 
 func main() {
-	var pilih int
+	var pilih, n, nextID int
 	var jln bool
+	n = 10
+	nextID = 10
 	jln = true
 	isiDataDummy()
 	fmt.Println("Selamat datang di SecurePass!")
@@ -578,21 +571,25 @@ func main() {
 			fmt.Println("Terima kasih sudah menggunakan SecurePass. Sampai jumpa!")
 			jln = false
 		} else if pilih == 1 {
-			tambahAkun()
+			tambahAkun(n, nextID)
+			nextID++
+			n++
 		} else if pilih == 2 {
-			ubahAkun()
+			ubahAkun(n)
 		} else if pilih == 3 {
-			hapusAkun()
+			hapusAkun(n, nextID)
+			n -= 1
+			nextID -= 1
 		} else if pilih == 4 {
-			cariAkun()
+			cariAkun(n)
 		} else if pilih == 5 {
-			tampilkanSemuaAkun()
+			tampilkanSemuaAkun(n)
 		} else if pilih == 6 {
-			urutkanNama()
+			urutkanNama(n)
 		} else if pilih == 7 {
-			urutkanInput()
+			urutkanInput(n)
 		} else if pilih == 8 {
-			statistik()
+			statistik(n)
 		} else {
 			fmt.Println("Pilihan tidak tersedia. Silakan pilih lagi.")
 		}
